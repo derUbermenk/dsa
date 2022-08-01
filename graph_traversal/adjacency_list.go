@@ -51,44 +51,37 @@ func (g *graph) InsertEdge(x, y int) {
 	}
 }
 
-func (g *graph) Bfs(start int) {
-	// disregard parent
+/*
+	for a graph instantiated this way
+		g.InsertEdge(0, 1)
+		g.InsertEdge(1, 3)
+		g.InsertEdge(1, 4)
+		g.InsertEdge(2, 0)
+		g.InsertEdge(2, 5)
+
+	using a start of 0 will not visit all vertices. while using 2 will.
+*/
+func (g *graph) Bfs(start int) (parents []int) {
 	/*
-		discovered bool -> arr with size vertex
-		processed bool -> arr with size vertex
+		processing_que and discovered array
 
-		processing_que -> que of vertex to process
-
-		enque(processing_que, start)
-		discovered[start] = TRUE
-		while the processing_que is not empty	{
-			current_vertex = deque(processing_que)
-			adjacency_list_of_current_vertex = edges[current_vertex]
-			while adjacency_list_of_current_vertex != null {
-				// check status of successor vertex and act accordingly
-				if !discovered[successor_vertex] {
-					// discover successor_vertex
-					discovered[successor_vertex] = true
-					enque(processing_que, successor_vertex)
-				}
-				// ?? don't know this step
-				if !processed[successor_vertex] || g.directed {
-					process_edge(v, y)
-				}
-				// go to next
-				adjacency_list = adjacency_list.next
-			}
-		}
-		// set current_vertex as processed
-		proccessed[current_vertex] = TRUE
+		discovery of a vertex assures us that it will not be processed anymore
+		as a vertex will only be added to the processing que if it has not been processed
+		and likewise will only be added to the processing que if it has been processed.
 	*/
+
+	// set initial parent values to -1
+	parents = make([]int, maxv)
+	for i := 0; i < len(parents); i++ {
+		parents[i] = -1
+	}
 
 	var v int       // current vertex
 	var y int       // successor vertex
 	var p *edgenode // adjacency list of the current vertex
 
-	discovered := make([]bool, g.nvertices)
-	processed := make([]bool, g.nvertices)
+	discovered := make([]bool, maxv)
+	processed := make([]bool, maxv)
 
 	processing_que := make([]int, 0)
 	// enque start
@@ -100,13 +93,17 @@ func (g *graph) Bfs(start int) {
 		v = processing_que[0]
 		processing_que = processing_que[1:]
 
+		// prints current vertex being processed
+		process_vertex_early(v)
+
 		// get the adjacency list of the current vertex (v)
 		p = g.edges[v]
 		for p != nil {
 			y = p.y
 			if !discovered[y] {
-				discovered[y] = true
 				processing_que = append(processing_que, y)
+				discovered[y] = true
+				parents[y] = v
 			}
 			/*
 				if !processed[y] || g.directed {
@@ -118,6 +115,21 @@ func (g *graph) Bfs(start int) {
 
 		processed[v] = true
 	}
+
+	return parents
+}
+
+func FindPath(parents []int, start, end int) {
+	if start == end || end == -1 {
+		fmt.Printf("%v -> ", start)
+	} else {
+		FindPath(parents, start, parents[end])
+		fmt.Printf("%v -> ", end)
+	}
+}
+
+func process_vertex_early(v int) {
+	fmt.Printf("%v -> ", v)
 }
 
 func (g *graph) Print() {

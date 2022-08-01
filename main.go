@@ -16,4 +16,8 @@ func main() {
 
 	fmt.Printf("%+v", g)
 	g.Print()
+
+	parents := g.Bfs(2)
+	fmt.Printf("\n")
+	graph_traversal.FindPath(parents, 2, 4)
 }
