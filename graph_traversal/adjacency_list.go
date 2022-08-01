@@ -51,6 +51,10 @@ func (g *graph) InsertEdge(x, y int) {
 	}
 }
 
+func (g *graph) Bfs(start int) {
+
+}
+
 func (g *graph) Print() {
 	init_graph_msg := fmt.Sprintf(
 		"number of vertices: %v \nnumber of edges: %v \ndirected: %v",
