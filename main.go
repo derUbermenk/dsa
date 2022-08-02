@@ -6,6 +6,10 @@ import (
 )
 
 func main() {
+
+}
+
+func GraphTraverse() {
 	g := graph_traversal.NewGraph(true)
 
 	g.InsertEdge(0, 1)
